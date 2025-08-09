@@ -30,6 +30,17 @@
   - ![Captura DynamoDB](images/hito2-dynamodb.png)
 - **Próximos pasos:** implementar GET /orders (listado) y validaciones de entrada.
 
+- ## Hito 3 — GET /orders (listar pedidos) funcional
+**Fecha:** 09/08/2025
+
+- **Objetivo:** implementar un endpoint que devuelva todos los pedidos almacenados en DynamoDB.
+- **Servicios AWS usados:** API Gateway (REST), Lambda, DynamoDB.
+- **Resultado:** petición GET a `/orders` devuelve un array JSON con todos los pedidos de la tabla.
+- **Pruebas:**
+  - ![Captura Postman — listado](images/hito3-listorders-postman.png)
+  - ![Captura DynamoDB — pedidos](images/hito3-listorders-dynamodb.png)
+- **Próximos pasos:** implementar filtros, paginación y validaciones de datos.
+
 
 ## Pruebas
 ## Costes
