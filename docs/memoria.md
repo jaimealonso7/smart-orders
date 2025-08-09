@@ -75,7 +75,6 @@
 - 
   - ![DELETE Postman](images/hito5-delete-postman.png)
   - ![DynamoDB tras borrado](images/hito5-delete-dynamodb.png)
-  - (Verificación) `GET /orders` devuelve el listado sin el `orderId` eliminado.
 - **Próximos pasos:** validación con schemas (AJV) y autenticación con Amazon Cognito (JWT) antes de exponer el frontend.
 
 
