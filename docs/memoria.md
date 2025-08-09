@@ -15,6 +15,7 @@
 - **Servicios AWS usados:** API Gateway (REST), Lambda, DynamoDB.
 - **Resultado:** petición POST crea un pedido, devuelve `orderId` y persiste los datos.
 - **Pruebas:**
+- 
   - ![Captura Postman](images/hito1-postman.png)
   - ![Captura DynamoDB](images/hito1-dynamodb.png)
 - **Próximos pasos:** implementar GET /orders/{id}, validaciones y CORS.
@@ -26,6 +27,7 @@
 - **Servicios AWS usados:** API Gateway (REST), Lambda, DynamoDB.
 - **Resultado:** petición GET devuelve el pedido en JSON.
 - **Pruebas:**
+- 
   - ![Captura GET Postman](images/hito2-get-order.png)
   - ![Captura DynamoDB](images/hito2-dynamodb.png)
 - **Próximos pasos:** implementar GET /orders (listado) y validaciones de entrada.
@@ -37,9 +39,31 @@
 - **Servicios AWS usados:** API Gateway (REST), Lambda, DynamoDB.
 - **Resultado:** petición GET a `/orders` devuelve un array JSON con todos los pedidos de la tabla.
 - **Pruebas:**
+- 
   - ![Captura Postman — listado](images/hito3-listorders-postman.png)
   - ![Captura DynamoDB — pedidos](images/hito3-listorders-dynamodb.png)
 - **Próximos pasos:** implementar filtros, paginación y validaciones de datos.
+
+- ## Hito 4 — PUT /orders/{id} funcional
+**Fecha:** 09/08/2025
+
+- **Objetivo:** Permitir actualizar campos de un pedido existente (status, quantity, product, price) en DynamoDB.
+- **Servicios AWS usados:** API Gateway (REST), Lambda, DynamoDB, IAM.
+- **Resultado:** El endpoint recibe un `orderId` en la ruta y un body JSON con los campos a modificar. Si el pedido existe, se actualiza y devuelve el nuevo estado. 
+- **Validaciones implementadas:**
+  - `quantity` debe ser positivo.
+  - `status` solo puede ser uno de `PENDING`, `PROCESSING`, `SHIPPED`, `CANCELLED`, `COMPLETED`.
+  - Solo se actualizan campos permitidos.
+- **Errores manejados:**
+  - `400` si faltan parámetros o el body es inválido.
+  - `404` si el pedido no existe.
+  - `500` para errores internos.
+- **Pruebas:**
+- 
+  - ![Captura Postman PUT](images/hito4-put.png)
+  - ![Captura DynamoDB actualizado](images/hito4-dynamodb.png)
+- **Próximos pasos:** Implementar DELETE /orders/{id}.
+
 
 
 ## Pruebas
