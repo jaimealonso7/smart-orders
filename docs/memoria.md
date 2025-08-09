@@ -19,6 +19,18 @@
   - ![Captura DynamoDB](images/hito1-dynamodb.png)
 - **Próximos pasos:** implementar GET /orders/{id}, validaciones y CORS.
 
+## Hito 2 — GET /orders/{id} funcional
+**Fecha:** 09/08/2025
+
+- **Objetivo:** permitir consultar un pedido específico por su ID.
+- **Servicios AWS usados:** API Gateway (REST), Lambda, DynamoDB.
+- **Resultado:** petición GET devuelve el pedido en JSON.
+- **Pruebas:**
+  - ![Captura GET Postman](images/hito2-get-order.png)
+  - ![Captura DynamoDB](images/hito2-dynamodb.png)
+- **Próximos pasos:** implementar GET /orders (listado) y validaciones de entrada.
+
+
 ## Pruebas
 ## Costes
 ## Lecciones aprendidas
