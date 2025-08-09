@@ -64,6 +64,20 @@
   - ![Captura DynamoDB actualizado](images/hito4-dynamodb.png)
 - **Próximos pasos:** Implementar DELETE /orders/{id}.
 
+## Hito 5 — DELETE /orders/{id} funcional
+**Fecha:** 09/08/2025
+
+- **Objetivo:** permitir eliminar un pedido por `orderId` desde DynamoDB.
+- **Servicios AWS usados:** API Gateway (REST), Lambda, DynamoDB, IAM.
+- **Resultado:** `DELETE /orders/{id}` elimina el ítem si existe y devuelve `204 No Content`. Si no existe, devuelve `404 Not Found`.
+- **Seguridad/Permisos:** rol de ejecución con `dynamodb:DeleteItem` sobre la tabla.
+- **Pruebas:**
+- 
+  - ![DELETE Postman](images/hito5-delete-postman.png)
+  - ![DynamoDB tras borrado](images/hito5-delete-dynamodb.png)
+  - (Verificación) `GET /orders` devuelve el listado sin el `orderId` eliminado.
+- **Próximos pasos:** validación con schemas (AJV) y autenticación con Amazon Cognito (JWT) antes de exponer el frontend.
+
 
 
 ## Pruebas
