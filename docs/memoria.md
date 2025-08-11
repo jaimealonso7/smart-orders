@@ -75,8 +75,24 @@
 - 
   - ![DELETE Postman](images/hito5-delete-postman.png)
   - ![DynamoDB tras borrado](images/hito5-delete-dynamodb.png)
-- **Próximos pasos:** validación con schemas (AJV) y autenticación con Amazon Cognito (JWT) antes de exponer el frontend.
+- **Próximos pasos:** creación de base de datos relacionl RDS.
 
+
+## Hito 6 — RDS para datos relacionales (catálogo de productos) y relación con DynamoDB
+**Fecha:** 11/08/2025
+
+- **Objetivo:** integrar una base de datos relacional Amazon RDS (MySQL) para almacenar información de productos y enriquecer los pedidos existentes en DynamoDB.
+
+- **Servicios AWS usados:** API Gateway (REST), Lambda, DynamoDB, Amazon RDS (MySQL), IAM.
+
+- **Resultado:** el endpoint GET /orders/{id}/with-product consulta primero DynamoDB para obtener el pedido y luego RDS para añadir información del producto (precio, descripción, etc.). Si no se encuentra el producto, el campo productInfo es null.
+
+- **Pruebas:**
+-
+  - ![Captura Postman](images/hito6-get-postman.png)
+  - ![Captura DynamoDB](images/hito6-get-rds.png)
+
+- **Próximos pasos:** AWS Step Functions.
 
 
 ## Pruebas
