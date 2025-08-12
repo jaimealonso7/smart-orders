@@ -1,3 +1,6 @@
+# Ignorar carpeta de compilación SAM
+.aws-sam/
+
 # Node
 node_modules/
 npm-debug.log*
