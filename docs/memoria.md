@@ -94,6 +94,35 @@
 
 - **Próximos pasos:** AWS Step Functions.
 
+- ---
+
+## Hito 7 — Step Functions: flujo “procesar pedido”
+**Fecha:** 12/08/2025  
+
+**Objetivo:**  
+Implementar un flujo orquestado con **AWS Step Functions** para procesar pedidos:  
+1. Validar stock  
+2. Cobrar pago  
+3. Notificar al cliente  
+
+**Servicios AWS usados:**  
+- AWS Step Functions (State Machine)  
+- AWS Lambda (ValidateStock, ChargePayment, ReleaseStock, NotifyCustomer)  
+- IAM (Roles y permisos)  
+
+**Resultado:**  
+Se implementó y desplegó el flujo usando AWS SAM.  
+- Ejecución exitosa devuelve `reservationId`, `paymentId` y flag `notified: true`.  
+- Errores controlados:  
+  - **StockNoDisponible** → flujo falla antes de cobrar.  
+  - **Payment.Fallo** → se activa la tarea de compensación `ReleaseStock`.
+
+**Despliegue:**  
+```bash
+sam build
+sam deploy --guided
+
+
 
 ## Pruebas
 ## Costes
