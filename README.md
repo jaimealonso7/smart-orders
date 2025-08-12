@@ -17,3 +17,16 @@ Tecnologías: AWS CDK/Serverless, API Gateway, Lambda, DynamoDB, SQS, Step Funct
 
 ## Documentación
 - Ver carpeta `docs/` para ADRs, Roadmap y decisiones.
+
+---
+
+# Hito 7 — Step Functions: flujo “procesar pedido”
+
+MVP del flujo con **AWS Step Functions**:
+1) Validar stock → 2) Marcar como pagado → 3) Notificar cliente (stub)
+
+## Despliegue (SAM)
+```bash
+sam build
+sam deploy --guided
+

@@ -1,0 +1,60 @@
+AWSTemplateFormatVersion: '2010-09-09'
+Transform: AWS::Serverless-2016-10-31
+Description: Hito 7 - Step Functions "procesar pedido" (validar -> pagar -> notificar)
+
+Globals:
+  Function:
+    Runtime: nodejs20.x
+    Handler: index.handler
+    Timeout: 10
+    MemorySize: 128
+
+Resources:
+  ValidateStockFn:
+    Type: AWS::Serverless::Function
+    Properties:
+      CodeUri: lambdas/validateStock/
+      Description: Valida y reserva stock (simulado)
+
+  ChargePaymentFn:
+    Type: AWS::Serverless::Function
+    Properties:
+      CodeUri: lambdas/chargePayment/
+      Description: Marca como pagado (simulado)
+
+  ReleaseStockFn:
+    Type: AWS::Serverless::Function
+    Properties:
+      CodeUri: lambdas/releaseStock/
+      Description: Revierte reserva de stock si falla pago
+
+  NotifyCustomerFn:
+    Type: AWS::Serverless::Function
+    Properties:
+      CodeUri: lambdas/notifyCustomer/
+      Description: Notifica al cliente (stub; SNS se agrega en Hito 9)
+
+  ProcessOrderStateMachine:
+    Type: AWS::Serverless::StateMachine
+    Properties:
+      Name: procesar-pedido-hito7
+      DefinitionUri: statemachine/procesar-pedido.asl.json
+      DefinitionSubstitutions:
+        ValidateStockFnArn: !GetAtt ValidateStockFn.Arn
+        ChargePaymentFnArn: !GetAtt ChargePaymentFn.Arn
+        ReleaseStockFnArn: !GetAtt ReleaseStockFn.Arn
+        NotifyCustomerFnArn: !GetAtt NotifyCustomerFn.Arn
+      Policies:
+        - LambdaInvokePolicy:
+            FunctionName: !Ref ValidateStockFn
+        - LambdaInvokePolicy:
+            FunctionName: !Ref ChargePaymentFn
+        - LambdaInvokePolicy:
+            FunctionName: !Ref ReleaseStockFn
+        - LambdaInvokePolicy:
+            FunctionName: !Ref NotifyCustomerFn
+
+Outputs:
+  StateMachineArn:
+    Description: ARN de la state machine
+    Value: !Ref ProcessOrderStateMachine

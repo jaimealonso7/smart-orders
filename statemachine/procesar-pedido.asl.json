@@ -1,0 +1,99 @@
+{
+  "Comment": "Hito 7: Flujo procesar pedido (validar stock -> marcar como pagado -> notificar cliente)",
+  "StartAt": "ValidarStock",
+  "States": {
+    "ValidarStock": {
+      "Type": "Task",
+      "Resource": "${ValidateStockFnArn}",
+      "Parameters": {
+        "order.$": "$.order",
+        "requestId.$": "$$.Execution.Id"
+      },
+      "Retry": [
+        {
+          "ErrorEquals": [
+            "Lambda.ServiceException",
+            "Lambda.TooManyRequestsException",
+            "Lambda.AWSLambdaException"
+          ],
+          "IntervalSeconds": 2,
+          "MaxAttempts": 3,
+          "BackoffRate": 2.0
+        }
+      ],
+      "Catch": [
+        {
+          "ErrorEquals": [
+            "StockNoDisponible"
+          ],
+          "ResultPath": "$.error",
+          "Next": "PedidoRechazado"
+        },
+        {
+          "ErrorEquals": [
+            "States.ALL"
+          ],
+          "ResultPath": "$.error",
+          "Next": "FalloIrrecuperable"
+        }
+      ],
+      "Next": "MarcarComoPagado"
+    },
+    "MarcarComoPagado": {
+      "Type": "Task",
+      "Resource": "${ChargePaymentFnArn}",
+      "Parameters": {
+        "order.$": "$.order",
+        "reservation.$": "$.reservation",
+        "requestId.$": "$$.Execution.Id"
+      },
+      "Retry": [
+        {
+          "ErrorEquals": [
+            "Payment.Temporario"
+          ],
+          "IntervalSeconds": 3,
+          "MaxAttempts": 4,
+          "BackoffRate": 2.0
+        }
+      ],
+      "Catch": [
+        {
+          "ErrorEquals": [
+            "Payment.Fallo"
+          ],
+          "ResultPath": "$.error",
+          "Next": "RevertirReserva"
+        },
+        {
+          "ErrorEquals": [
+            "States.ALL"
+          ],
+          "ResultPath": "$.error",
+          "Next": "RevertirReserva"
+        }
+      ],
+      "Next": "NotificarCliente"
+    },
+    "RevertirReserva": {
+      "Type": "Task",
+      "Resource": "${ReleaseStockFnArn}",
+      "End": true
+    },
+    "NotificarCliente": {
+      "Type": "Task",
+      "Resource": "${NotifyCustomerFnArn}",
+      "End": true
+    },
+    "PedidoRechazado": {
+      "Type": "Fail",
+      "Error": "PedidoRechazadoPorStock",
+      "Cause": "No hay stock suficiente"
+    },
+    "FalloIrrecuperable": {
+      "Type": "Fail",
+      "Error": "FalloIrrecuperable",
+      "Cause": "Error no controlado en ValidarStock"
+    }
+  }
+}
