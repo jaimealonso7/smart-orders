@@ -121,35 +121,36 @@ Se implementó y desplegó el flujo usando AWS SAM.
 ```bash
 sam build
 sam deploy --guided
+````
 
-- ---
 
-## Hito 8 — SQS/EventBridge para colas de pedidos a procesar  
-**Fecha:** 21/08/2025  
+## Hito 8 — SQS/EventBridge para colas de pedidos a procesar
+**Fecha:** 21/08/2025
 
-- **Objetivo:** desacoplar la creación de pedidos de su procesamiento, introduciendo una cola FIFO que garantice orden y deduplicación.  
+- **Objetivo:**  
+  Implementar una cola FIFO en **Amazon SQS** para recibir los pedidos creados desde la API y disparar automáticamente el flujo de Step Functions (`procesar-pedido-hito7`) mediante un **Worker Lambda**.
 
 - **Servicios AWS usados:**  
-  * Amazon SQS (FIFO + DLQ)  
-  * AWS Lambda (worker)  
-  * AWS Step Functions  
-  * AWS IAM  
-  * AWS SAM  
+  * Amazon SQS (cola principal + DLQ)  
+  * AWS Lambda (OrdersWorkerFunction)  
+  * AWS Step Functions (flujo de orquestación)  
+  * IAM (roles y permisos generados por SAM)
 
 - **Resultado:**  
-  * `POST /orders` ahora envía los pedidos a `smart-orders-orders-to-process.fifo`.  
-  * Una Lambda worker consume mensajes de la cola y dispara la Step Function.  
-  * Dead Letter Queue (DLQ) configurada para pedidos fallidos, asegurando resiliencia.  
-
-- **Seguridad/Permisos:**  
-  * Lambda con permisos `sqs:ReceiveMessage` y `states:StartExecution`.  
-  * API con permisos `sqs:SendMessage`.  
+  Cada vez que se hace un `POST /orders`:
+  1. La API envía el mensaje a la cola **`smart-orders-orders-to-process.fifo`**.  
+  2. El Worker Lambda (`smart-orders-orders-worker`) consume el mensaje y lanza la ejecución de la Step Function `procesar-pedido-hito7`.  
+  3. La cola se queda vacía (los mensajes no quedan pendientes en SQS).  
 
 - **Pruebas:**  
-  * ![Postman - crear pedido](images/hito8-post-orders.png)  
-  * ![SQS con mensaje](images/hito8-stepfunctions.png)  
+  - Creación de pedido desde Postman → pedido en estado **CREATED**  
+    ![POST /orders](images/hito8-post-orders.png)  
+  - Ejecución iniciada en Step Functions  
+    ![Step Functions execution](images/hito8-stepfunctions.png)  
 
-- **Próximos pasos:** conectar SNS para notificaciones al cliente (**Hito 9**).  
+- **Próximos pasos:**  
+  Conectar la **SNS** para enviar notificaciones de estado (Hito 9).
+
 
 
 
