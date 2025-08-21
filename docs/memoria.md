@@ -122,6 +122,35 @@ Se implementó y desplegó el flujo usando AWS SAM.
 sam build
 sam deploy --guided
 
+- ---
+
+## Hito 8 — SQS/EventBridge para colas de pedidos a procesar  
+**Fecha:** 21/08/2025  
+
+- **Objetivo:** desacoplar la creación de pedidos de su procesamiento, introduciendo una cola FIFO que garantice orden y deduplicación.  
+
+- **Servicios AWS usados:**  
+  * Amazon SQS (FIFO + DLQ)  
+  * AWS Lambda (worker)  
+  * AWS Step Functions  
+  * AWS IAM  
+  * AWS SAM  
+
+- **Resultado:**  
+  * `POST /orders` ahora envía los pedidos a `smart-orders-orders-to-process.fifo`.  
+  * Una Lambda worker consume mensajes de la cola y dispara la Step Function.  
+  * Dead Letter Queue (DLQ) configurada para pedidos fallidos, asegurando resiliencia.  
+
+- **Seguridad/Permisos:**  
+  * Lambda con permisos `sqs:ReceiveMessage` y `states:StartExecution`.  
+  * API con permisos `sqs:SendMessage`.  
+
+- **Pruebas:**  
+  * ![Postman - crear pedido](images/hito8-post-orders.png)  
+  * ![SQS con mensaje](images/hito8-stepfunctions.png)  
+
+- **Próximos pasos:** conectar SNS para notificaciones al cliente (**Hito 9**).  
+
 
 
 ## Pruebas
