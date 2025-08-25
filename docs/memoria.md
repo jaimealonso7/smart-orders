@@ -153,6 +153,46 @@ sam deploy --guided
 
 
 
+## Hito 9 — SNS para notificar cambios de estado
+**Fecha:** 25/08/2025  
+
+### Objetivo
+Notificar al cliente (por email/SMS) cuando el estado de su pedido cambie.
+
+---
+
+### Implementación
+- Creación de la Lambda `smart-orders-status-notifier` (`src/notifier/status.js`).
+- Configuración del Tópico SNS `smart-orders-status`.
+- Conexión de la Step Function al notificador (`NotifyStatus`).
+- Suscripción confirmada por email (Gmail).
+
+---
+
+### Pruebas
+- Cambio de estado en la Step Function → invoca la Lambda notificador  
+  ![Step Functions NotifyStatus](images/hito9-stepfunctions-notify.png)  
+
+- Mensaje publicado en el Tópico SNS (`NumberOfMessagesPublished` en CloudWatch incrementa)  
+  ![SNS Metrics](images/hito9-suscripcion-confirmada.png)  
+
+- Email recibido en Gmail con el estado actualizado del pedido  
+  ![Email recibido](images/hito9-email-recibido.png)  
+
+- Alarma de CloudWatch configurada sobre `NumberOfNotificationsFailed`  
+  ![CloudWatch Alarm](images/hito9-alarm.png)  
+
+---
+
+### Resultado
+- Los pedidos generan notificaciones automáticas al cambiar de estado.
+- Los clientes reciben emails confirmando el estado (`CREATED`, `PAID`, `SHIPPED`, etc.).
+- Se garantiza observabilidad y alertas ante fallos con CloudWatch.
+
+
+
+
+
 
 ## Pruebas
 ## Costes
