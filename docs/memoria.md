@@ -213,7 +213,7 @@ Proteger la API Smart Orders contra ataques comunes en capa 7 (SQLi, XSS, IP mal
 ---
 
 ### Pruebas
-- **Tráfico normal** a `GET /orders` → **200 OK**  
+- **Reglas del Web ACL configuradas en AWS WAF**   
   ![GET OK](images/hito11-waf-rules.png)
 
 - **Prueba SQLi bloqueada por WAF (403 Forbidden)**  
