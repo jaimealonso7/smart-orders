@@ -190,6 +190,39 @@ Notificar al cliente (por email/SMS) cuando el estado de su pedido cambie.
 - Se garantiza observabilidad y alertas ante fallos con CloudWatch.
 
 
+## Hito 11 — WAF en API Gateway para filtrar ataques comunes
+**Fecha:** 27/08/2025  
+
+### Objetivo
+Proteger la API Smart Orders contra ataques comunes en capa 7 (SQLi, XSS, IP maliciosas, floods) antes de que lleguen a Lambda.
+
+---
+
+### Implementación
+- Creación del **Web ACL** `smartorders-waf` en AWS WAF (scope **Regional**).
+- Asociación del Web ACL al **stage `dev`** de la API Gateway (`93jb0gctel`).
+- Añadidas reglas gestionadas de AWS (gratuitas):
+  - `Core rule set` (protección OWASP genérica).
+  - `Known bad inputs` (bloqueo de patrones maliciosos conocidos).
+  - `SQL database` (detección de inyección SQL).
+  - `Amazon IP reputation list` (bloqueo de IPs sospechosas).
+  - `Anonymous IP list` (VPN, proxies, Tor).
+- Acción configurada en **Block** (no solo *Count*).
+- Default action del Web ACL: **Allow**.
+
+---
+
+### Pruebas
+- **Tráfico normal** a `GET /orders` → **200 OK**  
+  ![GET OK](images/hito11-get-ok.png)
+
+- **Prueba SQLi bloqueada por WAF (403 Forbidden)**  
+  ![403 SQLi](images/hito11-sqli-block.png)
+
+- **Inyección SQL** en querystring → **403 Forbidden** bloqueado por WAF  
+  ```bash
+  curl --ssl-no-revoke -i "https://93jb0gctel.execute-api.eu-west-1.amazonaws.com/dev/orders?search=%27%20OR%201%3D1%20--"
+
 
 
 
