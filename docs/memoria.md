@@ -233,15 +233,18 @@ Centralizar y proteger las credenciales de acceso a la base de datos en **AWS Se
 ---
 
 ### Implementación
-- Creación del secreto en **AWS Secrets Manager** con los datos de conexión al RDS:
-  ```json
-  {
-    "host": "xxxxx.eu-west-1.rds.amazonaws.com",
-    "port": 3306,
-    "username": "db_user",
-    "password": "********",
-    "engine": "mysql"
-  }
+- Creación de **dos secretos en AWS Secrets Manager**:
+  1. `smartorders/rds/prod` → credenciales de la base de datos de producción.  
+     - ARN: `arn:aws:secretsmanager:eu-west-1:509399611458:secret:smartorders/rds/prod-C5vvpU`
+  2. `smartorders/rds/dev` → credenciales para entorno de desarrollo.  
+     - ARN: `arn:aws:secretsmanager:eu-west-1:509399611458:secret:smartorders/rds/dev-XXXXXX`
+
+- Configuración de la Lambda `smart-orders-db-fn`:
+  - Variable de entorno `SECRET_ID` apuntando al secreto de **producción**.
+  - Variable `DB_NAME=productos`.
+  - Rol IAM con permisos mínimos:
+    - `secretsmanager:GetSecretValue`
+    - `secretsmanager:DescribeSecret`
 
 
 
