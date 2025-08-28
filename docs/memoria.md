@@ -224,6 +224,24 @@ Proteger la API Smart Orders contra ataques comunes en capa 7 (SQLi, XSS, IP mal
   curl --ssl-no-revoke -i "https://93jb0gctel.execute-api.eu-west-1.amazonaws.com/dev/orders?search=%27%20OR%201%3D1%20--"
 
 
+## Hito 12 — Secrets Manager para gestionar credenciales seguras  
+**Fecha:** 28/08/2025  
+
+### Objetivo
+Centralizar y proteger las credenciales de acceso a la base de datos en **AWS Secrets Manager**, evitando exponer contraseñas en el código o en variables de entorno planas.
+
+---
+
+### Implementación
+- Creación del secreto en **AWS Secrets Manager** con los datos de conexión al RDS:
+  ```json
+  {
+    "host": "xxxxx.eu-west-1.rds.amazonaws.com",
+    "port": 3306,
+    "username": "db_user",
+    "password": "********",
+    "engine": "mysql"
+  }
 
 
 
